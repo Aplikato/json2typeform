@@ -3,7 +3,7 @@ enum FormType {
   End = "END",
   Start = "START",
   MultipleChoice = "MULTIPLE_CHOICE",
-  Number = "NUMBER"
+  Number = "NUMBER",
 }
 
 interface FieldProperties {
@@ -21,7 +21,7 @@ interface FormResponses {
 
 enum ConditionType {
   Equal = "EQUAL",
-  Always = "ALWAYS"
+  Always = "ALWAYS",
 }
 interface Condition {
   type: ConditionType;
@@ -66,12 +66,12 @@ const types: Types = {
 
       return elements;
     },
-    handler: id => null,
+    handler: (id) => null,
     // remove focus on start
     focus: () => {
       if (document.activeElement instanceof HTMLElement)
         document.activeElement.blur();
-    }
+    },
   },
   END: {
     template: (id, properties) => {
@@ -89,7 +89,7 @@ const types: Types = {
 
       return elements;
     },
-    handler: id => null
+    handler: (id) => null,
   },
   STRING: {
     template: (id, properties) => {
@@ -106,13 +106,13 @@ const types: Types = {
 
       return [question, input];
     },
-    handler: id => {
+    handler: (id) => {
       const value = (<HTMLInputElement>document.getElementById(id)).value;
       return value;
     },
-    focus: id => {
+    focus: (id) => {
       document.getElementById(id).focus();
-    }
+    },
   },
   MULTIPLE_CHOICE: {
     template: (id, properties) => {
@@ -133,13 +133,13 @@ const types: Types = {
 
       return [question, select];
     },
-    handler: id => {
+    handler: (id) => {
       const value = (<HTMLSelectElement>document.getElementById(id)).value;
       return value;
     },
-    focus: id => {
+    focus: (id) => {
       document.getElementById(id).focus();
-    }
+    },
   },
   NUMBER: {
     template: (id, properties) => {
@@ -155,14 +155,14 @@ const types: Types = {
 
       return [question, input];
     },
-    handler: id => {
+    handler: (id) => {
       const value = (<HTMLInputElement>document.getElementById(id)).value;
       return value;
     },
-    focus: id => {
+    focus: (id) => {
       document.getElementById(id).focus();
-    }
-  }
+    },
+  },
 };
 
 class FormBuilder {
@@ -176,15 +176,16 @@ class FormBuilder {
 
   private inputContainer_: HTMLElement;
   private answers_: object = {};
-  private callback_: any;
+
+  private resolve_: any;
 
   /* currently rendered step */
   private step_ = null;
 
-  constructor(form: Form, callback: any) {
+  constructor(form: Form) {
     // form with start and end
     this.form_ = {
-      steps: form.fields.map(field => this.stepToField_(field))
+      steps: form.fields.map((field) => this.stepToField_(field)),
     };
     this.step_ = this.form_.steps[0];
 
@@ -193,40 +194,42 @@ class FormBuilder {
     this.footer_.className = "j2f-footer";
 
     this.overlapElement_.appendChild(this.footer_);
-
-    this.callback_ = callback;
   }
 
   stepToField_(field) {
     const step = {
       ...field,
       template: () => types[field.type].template(field.id, field.properties),
-      handler: () => types[field.type].handler(field.id)
+      handler: () => types[field.type].handler(field.id),
     };
     if ("focus" in types[field.type])
       step.focus = () => types[field.type].focus(field.id);
     return step;
   }
 
-  init() {
+  async init() {
     this.rootElement_.appendChild(this.overlapElement_);
 
     // add return listener
-    this.rootElement_.addEventListener("keypress", e => {
+    this.rootElement_.addEventListener("keypress", (e) => {
       if (e.key === "Enter") {
         this.next_();
       }
     });
 
     this.renderStep_(this.step_);
+
+    return new Promise((resolve, reject) => {
+      this.resolve_ = resolve;
+    });
   }
 
   next_() {
     if (this.isTransitioning_) return;
 
     if (this.step_.type === FormType.End) {
-      this.callback_(this.answers_);
       this.overlapElement_.remove();
+      this.resolve_(this.answers_);
       return;
     }
 
@@ -257,7 +260,6 @@ class FormBuilder {
     }
 
     this.transitionContainer_(container);
-    console.log(step);
     if ("focus" in step) step.focus();
   }
 
@@ -308,7 +310,7 @@ class FormBuilder {
     }
 
     // linear
-    const index = this.form_.steps.findIndex(step => step.id === prevStep.id);
+    const index = this.form_.steps.findIndex((step) => step.id === prevStep.id);
     return this.form_.steps[index + 1];
   }
 

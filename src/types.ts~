@@ -1,6 +1,0 @@
-const types = {
-  string: {
-    template: `<input type="text" />`,
-    handler: () => "value";
-  }
-}

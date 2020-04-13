@@ -1,5 +1,12 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var FormType;
 (function (FormType) {
     FormType["String"] = "STRING";
@@ -27,12 +34,12 @@ const types = {
             }
             return elements;
         },
-        handler: id => null,
+        handler: (id) => null,
         // remove focus on start
         focus: () => {
             if (document.activeElement instanceof HTMLElement)
                 document.activeElement.blur();
-        }
+        },
     },
     END: {
         template: (id, properties) => {
@@ -47,7 +54,7 @@ const types = {
             }
             return elements;
         },
-        handler: id => null
+        handler: (id) => null,
     },
     STRING: {
         template: (id, properties) => {
@@ -62,13 +69,13 @@ const types = {
             input.setAttribute("placeholder", properties.placeholder);
             return [question, input];
         },
-        handler: id => {
+        handler: (id) => {
             const value = document.getElementById(id).value;
             return value;
         },
-        focus: id => {
+        focus: (id) => {
             document.getElementById(id).focus();
-        }
+        },
     },
     MULTIPLE_CHOICE: {
         template: (id, properties) => {
@@ -86,13 +93,13 @@ const types = {
             }
             return [question, select];
         },
-        handler: id => {
+        handler: (id) => {
             const value = document.getElementById(id).value;
             return value;
         },
-        focus: id => {
+        focus: (id) => {
             document.getElementById(id).focus();
-        }
+        },
     },
     NUMBER: {
         template: (id, properties) => {
@@ -106,17 +113,17 @@ const types = {
             input.setAttribute("type", "number");
             return [question, input];
         },
-        handler: id => {
+        handler: (id) => {
             const value = document.getElementById(id).value;
             return value;
         },
-        focus: id => {
+        focus: (id) => {
             document.getElementById(id).focus();
-        }
-    }
+        },
+    },
 };
 class FormBuilder {
-    constructor(form, callback) {
+    constructor(form) {
         this.isTransitioning_ = false;
         this.rootElement_ = document.body;
         this.overlapElement_ = document.createElement("div");
@@ -126,14 +133,13 @@ class FormBuilder {
         this.step_ = null;
         // form with start and end
         this.form_ = {
-            steps: form.fields.map(field => this.stepToField_(field))
+            steps: form.fields.map((field) => this.stepToField_(field)),
         };
         this.step_ = this.form_.steps[0];
         // CSS
         this.overlapElement_.className = "j2f-overlap";
         this.footer_.className = "j2f-footer";
         this.overlapElement_.appendChild(this.footer_);
-        this.callback_ = callback;
     }
     stepToField_(field) {
         const step = Object.assign(Object.assign({}, field), { template: () => types[field.type].template(field.id, field.properties), handler: () => types[field.type].handler(field.id) });
@@ -142,21 +148,26 @@ class FormBuilder {
         return step;
     }
     init() {
-        this.rootElement_.appendChild(this.overlapElement_);
-        // add return listener
-        this.rootElement_.addEventListener("keypress", e => {
-            if (e.key === "Enter") {
-                this.next_();
-            }
+        return __awaiter(this, void 0, void 0, function* () {
+            this.rootElement_.appendChild(this.overlapElement_);
+            // add return listener
+            this.rootElement_.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    this.next_();
+                }
+            });
+            this.renderStep_(this.step_);
+            return new Promise((resolve, reject) => {
+                this.resolve_ = resolve;
+            });
         });
-        this.renderStep_(this.step_);
     }
     next_() {
         if (this.isTransitioning_)
             return;
         if (this.step_.type === FormType.End) {
-            this.callback_(this.answers_);
             this.overlapElement_.remove();
+            this.resolve_(this.answers_);
             return;
         }
         if (this.step_.type != FormType.Start)
@@ -181,7 +192,6 @@ class FormBuilder {
             container.appendChild(element);
         }
         this.transitionContainer_(container);
-        console.log(step);
         if ("focus" in step)
             step.focus();
     }
@@ -228,7 +238,7 @@ class FormBuilder {
             throw new Error("Logic is broken. Check your conditions!");
         }
         // linear
-        const index = this.form_.steps.findIndex(step => step.id === prevStep.id);
+        const index = this.form_.steps.findIndex((step) => step.id === prevStep.id);
         return this.form_.steps[index + 1];
     }
     transitionContainer_(newEl) {
@@ -262,4 +272,4 @@ class FormBuilder {
             this.footer_.appendChild(newEl);
     }
 }
-exports.default = FormBuilder;
+export default FormBuilder;

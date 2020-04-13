@@ -1,15 +1,26 @@
 {
   "name": "@aplikato/json2typeform",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "description": "Converts a JSON object to a form similar to Typeform.",
   "main": "dist/index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "publish": "yarn build && npm publish",
+    "build": "tsc",
+    "dev": "forever start ./node_modules/http-server/bin/http-server -p 8080 -d false && tsc --p \"./tsconfig.test.json\""
   },
   "author": "Dirk Hornung",
   "license": "ISC",
-  "keywords": ["JSON", "Javascript", "Form", "Typeform"]
+  "keywords": [
+    "JSON",
+    "Javascript",
+    "Form",
+    "Typeform"
+  ],
+  "devDependencies": {
+    "forever": "^2.0.0",
+    "http-server": "^0.12.1"
+  }
 }

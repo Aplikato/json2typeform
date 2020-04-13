@@ -12,52 +12,52 @@
             id: "start",
             properties: {
               title: "Welcome2",
-              subtitle: "Subtitle sdfjsdkfj slkdfj sl"
-            }
+              subtitle: "Subtitle sdfjsdkfj slkdfj sl",
+            },
           },
           {
             type: "STRING",
             id: "string",
             properties: {
               question: "What is your string?",
-              placeholder: "max@mustermann.de"
+              placeholder: "max@mustermann.de",
             },
             logic: {
               conditions: [
                 { type: "EQUAL", value: "afs", to: "number" },
-                { type: "ALWAYS", to: "end" }
-              ]
-            }
+                { type: "ALWAYS", to: "end" },
+              ],
+            },
           },
-          {
-            type: "MULTIPLE_CHOICE",
-            id: "multipleChoice",
-            properties: {
-              question: "What is your choice?",
-              choices: ["first", "second", "third"]
-            }
-          },
-          {
-            type: "NUMBER",
-            id: "number",
-            properties: {
-              question: "What is your number?"
-            }
-          },
+          // {
+          //   type: "MULTIPLE_CHOICE",
+          //   id: "multipleChoice",
+          //   properties: {
+          //     question: "What is your choice?",
+          //     choices: ["first", "second", "third"]
+          //   }
+          // },
+          // {
+          //   type: "NUMBER",
+          //   id: "number",
+          //   properties: {
+          //     question: "What is your number?"
+          //   }
+          // },
           {
             type: "END",
             id: "end",
             properties: {
               title: "End",
-            }
+            },
           },
-        ]
+        ],
       };
-      const callback = answers => {
+      const formBuilder = new FormBuilder(form);
+      document.getElementById("button").addEventListener("click", async () => {
+        const answers = await formBuilder.init();
         console.log(answers);
-      };
-      const formBuilder = new FormBuilder(form, callback);
-      document.getElementById('button').addEventListener('click', () => formBuilder.init())
+      });
     </script>
 
     <title>Test</title>
