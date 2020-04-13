@@ -7,7 +7,6 @@
     "test": "test"
   },
   "scripts": {
-    "publish": "yarn build && npm publish",
     "build": "tsc",
     "dev": "forever start ./node_modules/http-server/bin/http-server -p 8080 -d false && tsc --p \"./tsconfig.test.json\""
   },

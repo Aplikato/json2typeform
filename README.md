@@ -1,11 +1,20 @@
+# Publish to npm
+
+```shell
+# change version number
+npm login
+npm publish
+```
+
 - style is saved in `./dist/style.css`
 
 # Compile Typescript to Javascript
-`tsc -w ` recompiles everytime a typescript file changes.
+
+`tsc -w` recompiles everytime a typescript file changes.
 
 # Test
-``` shell
-cd json2typeform
-npx http-server
-# then go to the test directory
+
+```shell
+yarn dev
+http://localhost:8080
 ```
