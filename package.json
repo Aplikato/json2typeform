@@ -1,0 +1,15 @@
+{
+  "name": "@aplikato/json2typeform",
+  "version": "0.1.2",
+  "description": "Converts a JSON object to a form similar to Typeform.",
+  "main": "dist/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dirk Hornung",
+  "license": "ISC",
+  "keywords": ["JSON", "Javascript", "Form", "Typeform"]
+}
