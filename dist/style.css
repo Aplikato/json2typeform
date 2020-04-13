@@ -1,0 +1,113 @@
+/*@import url("https://fonts.googleapis.com/css?family=Montserrat");*/
+
+body {
+  margin: 0;
+}
+
+@keyframes j2f-remove {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.j2f-remove {
+  animation: j2f-remove 1s forwards;
+}
+
+@keyframes add {
+  from {
+    opacity: 0.2;
+    transform: translate3d(0, 100%, 0);
+    visibility: visible;
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.j2f {
+  font-family: Montserrat;
+}
+
+.j2f-add {
+  animation: add 1s forwards;
+}
+
+.j2f-overlap {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: rgb(0, 209, 178, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.j2f-container {
+  position: absolute;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  width: 70%;
+  box-shadow: 0 8px 6px -6px black;
+  text-align: center;
+}
+
+.j2f-container > h3 {
+  font-size: 1.5rem;
+  margin: 0 0 12px 0;
+}
+
+.j2f-container > input {
+  border: none;
+  background: none;
+  box-shadow: 0 1px rgb(0, 0, 0, 0.3);
+  width: 100%;
+  padding: 0 0 8px 0;
+  font-size: 1.2rem;
+}
+
+.j2f-container > select {
+  font-size: 1.7rem;
+  background-color: #00d1b2;
+  border: 0;
+  padding: 12px;
+  width: 70%;
+  color: white;
+}
+
+/* 
+ * Footer navigation 
+ */
+.j2f-footer {
+  background-color: white;
+  position: absolute;
+  height: 70px;
+  width: 100vw;
+  bottom: 0;
+}
+
+.j2f-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.j2f-footer > button {
+  position: absolute;
+  color: white;
+  bottom: 12px;
+  background-color: #00d1b2;
+  padding: 10px;
+  border-width: 0px;
+  border-radius: 8px;
+  font-size: 1.5rem;
+}

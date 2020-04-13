@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script type="text/javascript" src="../build/index.js"></script>
+
+    <title>Test</title>
+  </head>
+
+  <body>
+    sdfjslkdfj sldkfj sldkfj sdlkfj slkdf
+
+    <div id="root"></div>
+<script type="module" src="index.js">
+      import { FormBuilder } from 'index.js';
+           const form = {
+             fields: [
+               {
+                 type: "STRING",
+                 id: "string",
+                 properties: {
+                   question: "What is your string?"
+                 },
+                 logic: {
+                   conditions: [
+                     { type: "EQUAL", value: "afs", to: "number" },
+                     { type: "ALWAYS", to: "multipleChoice" }
+                   ]
+                 }
+               },
+               {
+                 type: "MULTIPLE_CHOICE",
+                 id: "multipleChoice",
+                 properties: {
+                   question: "What is your choice?",
+                   choices: ["first", "second", "third"]
+                 }
+               },
+               {
+                 type: "NUMBER",
+                 id: "number",
+                 properties: {
+                   question: "What is your number?"
+                 }
+               }
+             ]
+           };
+           const callback = answers => {
+             console.log(answers);
+           };
+           var formBuilder = new FormBuilder("root", form, callback);
+           formGenerator.init();
+    </script>
+  </body>
+</html>

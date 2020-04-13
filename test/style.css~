@@ -1,0 +1,48 @@
+body {
+  margin: 0;
+}
+
+@keyframes remove {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+.aplikatoForm .remove {
+  animation: remove 1s forwards;
+}
+
+@keyframes add {
+  from {
+    opacity: 0.2;
+    transform: translate3d(0, 100%, 0);
+    visibility: visible;
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+.aplikatoForm .add {
+  animation: add 1s forwards;
+}
+
+.aplikatoForm > .overlap {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgb(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.aplikatoForm .container {
+  position: absolute;
+}

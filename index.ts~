@@ -1,0 +1,3 @@
+class FormGenerator {
+  private index_: number;
+}
