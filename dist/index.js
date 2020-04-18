@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,7 +7,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
 var FormType;
 (function (FormType) {
     FormType["String"] = "STRING";
@@ -152,6 +150,8 @@ class FormBuilder {
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             this.rootElement_.appendChild(this.overlapElement_);
+            const button = document.createElement("button");
+            this.overlapElement_.appendChild(button);
             // add return listener
             this.rootElement_.addEventListener("keypress", (e) => {
                 if (e.key === "Enter") {
@@ -244,8 +244,8 @@ class FormBuilder {
         return this.form_.steps[index + 1];
     }
     transitionContainer_(newEl) {
-        // if overlap element contains container (and footer)
-        if (this.overlapElement_.children.length === 2) {
+        // if overlap element contains container (and close-button and footer)
+        if (this.overlapElement_.children.length === 3) {
             this.isTransitioning_ = true;
             const oldEl = this.overlapElement_.firstChild;
             // animate
@@ -274,5 +274,5 @@ class FormBuilder {
             this.footer_.appendChild(newEl);
     }
 }
-exports.default = FormBuilder;
+export default FormBuilder;
 //# sourceMappingURL=index.js.map

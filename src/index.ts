@@ -210,6 +210,9 @@ class FormBuilder {
   async init() {
     this.rootElement_.appendChild(this.overlapElement_);
 
+    const button = document.createElement("button");
+    this.overlapElement_.appendChild(button);
+
     // add return listener
     this.rootElement_.addEventListener("keypress", (e) => {
       if (e.key === "Enter") {
@@ -315,8 +318,8 @@ class FormBuilder {
   }
 
   transitionContainer_(newEl: HTMLElement) {
-    // if overlap element contains container (and footer)
-    if (this.overlapElement_.children.length === 2) {
+    // if overlap element contains container (and close-button and footer)
+    if (this.overlapElement_.children.length === 3) {
       this.isTransitioning_ = true;
       const oldEl = <HTMLElement>this.overlapElement_.firstChild;
 
