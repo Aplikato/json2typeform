@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 var FormType;
 (function (FormType) {
     FormType["String"] = "STRING";
@@ -272,4 +274,5 @@ class FormBuilder {
             this.footer_.appendChild(newEl);
     }
 }
-export default FormBuilder;
+exports.default = FormBuilder;
+//# sourceMappingURL=index.js.map
