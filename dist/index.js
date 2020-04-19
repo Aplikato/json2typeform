@@ -156,6 +156,9 @@ class FormBuilder {
             this.overlapElement_.appendChild(closeButton);
             closeButton.onclick = () => {
                 this.overlapElement_.remove();
+                this.overlapElement_ = document.createElement("div");
+                this.overlapElement_.className = "j2f-overlap";
+                this.overlapElement_.appendChild(this.footer_);
                 this.answers_ = null;
             };
             // add return listener
