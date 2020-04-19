@@ -210,8 +210,14 @@ class FormBuilder {
   async init() {
     this.rootElement_.appendChild(this.overlapElement_);
 
-    const button = document.createElement("button");
-    this.overlapElement_.appendChild(button);
+    // close button
+    const closeButton = document.createElement("button");
+    closeButton.innerText = "x";
+    this.overlapElement_.appendChild(closeButton);
+    closeButton.onclick = () => {
+      this.overlapElement_.remove();
+      this.answers_ = null;
+    };
 
     // add return listener
     this.rootElement_.addEventListener("keypress", (e) => {
