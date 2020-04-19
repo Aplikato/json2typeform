@@ -52,6 +52,16 @@ body {
   align-items: center;
 }
 
+.j2f-overlap > button {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+  border-width: 0px;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-shadow: 0 8px 6px -6px black;
+}
+
 .j2f-container {
   position: absolute;
   padding: 20px;
