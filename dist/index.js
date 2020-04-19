@@ -155,11 +155,7 @@ class FormBuilder {
             closeButton.innerText = "x";
             this.overlapElement_.appendChild(closeButton);
             closeButton.onclick = () => {
-                this.overlapElement_.remove();
-                this.overlapElement_ = document.createElement("div");
-                this.overlapElement_.className = "j2f-overlap";
-                this.overlapElement_.appendChild(this.footer_);
-                this.answers_ = null;
+                this.reset_();
             };
             // add return listener
             this.rootElement_.addEventListener("keypress", (e) => {
@@ -172,6 +168,13 @@ class FormBuilder {
                 this.resolve_ = resolve;
             });
         });
+    }
+    reset_() {
+        this.overlapElement_.remove();
+        this.overlapElement_ = document.createElement("div");
+        this.overlapElement_.className = "j2f-overlap";
+        this.overlapElement_.appendChild(this.footer_);
+        this.answers_ = null;
     }
     next_() {
         if (this.isTransitioning_)
