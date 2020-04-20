@@ -1,12 +1,12 @@
 # Publish to npm
 
 ```shell
-# change version number
-npm login
-npm publish
+yarn pub
+# might require login via:
+# npm login
 ```
 
-- style is saved in `./dist/style.css`
+- style is saved in `./style/aplikato.css` and has to be copied to `./dist/style.css` before publishing.
 
 # Compile Typescript to Javascript
 
