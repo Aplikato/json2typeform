@@ -210,6 +210,14 @@ class FormBuilder {
   async init() {
     this.rootElement_.appendChild(this.overlapElement_);
 
+    // close button
+    const closeButton = document.createElement("button");
+    closeButton.innerText = "x";
+    this.overlapElement_.appendChild(closeButton);
+    closeButton.onclick = () => {
+      this.reset_();
+    };
+
     // add return listener
     this.rootElement_.addEventListener("keypress", (e) => {
       if (e.key === "Enter") {
@@ -222,6 +230,14 @@ class FormBuilder {
     return new Promise((resolve, reject) => {
       this.resolve_ = resolve;
     });
+  }
+
+  reset_() {
+    this.overlapElement_.remove();
+    this.overlapElement_ = document.createElement("div");
+    this.overlapElement_.className = "j2f-overlap";
+    this.overlapElement_.appendChild(this.footer_);
+    this.answers_ = null;
   }
 
   next_() {
@@ -315,8 +331,8 @@ class FormBuilder {
   }
 
   transitionContainer_(newEl: HTMLElement) {
-    // if overlap element contains container (and footer)
-    if (this.overlapElement_.children.length === 2) {
+    // if overlap element contains container (and close-button and footer)
+    if (this.overlapElement_.children.length === 3) {
       this.isTransitioning_ = true;
       const oldEl = <HTMLElement>this.overlapElement_.firstChild;
 
