@@ -22,7 +22,7 @@ body {
 }
 
 .j2f-add {
-  animation: add 1s forwards;
+  animation: add 0.5s forwards;
 }
 
 .j2f-overlap {
@@ -32,7 +32,7 @@ body {
   bottom: 0;
   left: 0;
   z-index: 1000;
-  background-color: rgb(0, 209, 178, 0.8);
+  background-color: rgb(0, 209, 178, 0.95);
   display: flex;
   justify-content: center;
   align-items: center;

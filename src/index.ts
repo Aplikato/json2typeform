@@ -170,7 +170,6 @@ const types: Types = {
 
 class FormBuilder {
   private form_: any;
-  private isTransitioning_: boolean = false;
   private responses_: FormResponses;
 
   private rootElement_: HTMLElement = document.body;
@@ -258,8 +257,6 @@ class FormBuilder {
   }
 
   next_() {
-    if (this.isTransitioning_) return;
-
     if (this.step_.type === FormType.End) {
       this.overlapElement_.remove();
       this.resolve_(this.answers_);
@@ -349,15 +346,10 @@ class FormBuilder {
   transitionStep_(newStepEl: HTMLElement) {
     // if overlap element contains step
     if (this.containerEl_.children.length === 1) {
-      this.isTransitioning_ = true;
       const oldStepEl = <HTMLElement>this.containerEl_.firstChild;
 
       // animate
       this.containerEl_.replaceChild(newStepEl, oldStepEl);
-
-      setTimeout(() => {
-        this.isTransitioning_ = false;
-      }, 1000);
     } else this.containerEl_.prepend(newStepEl);
   }
 
