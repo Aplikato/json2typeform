@@ -1,3 +1,5 @@
+import Feedback from "./feedback.js";
+
 enum FormType {
   String = "STRING",
   End = "END",
@@ -31,6 +33,7 @@ interface Condition {
 interface FormField {
   type: FormType;
   id: string;
+  required?: boolean;
   properties?: FieldProperties;
   logic?: {
     conditions: Condition[];
@@ -172,6 +175,8 @@ class FormBuilder {
 
   private rootElement_: HTMLElement = document.body;
   private overlapElement_: HTMLElement = document.createElement("div");
+  private containerEl_: HTMLElement = document.createElement("div");
+  private feedbackEl_: HTMLElement = document.createElement("div");
   private footer_: HTMLElement = document.createElement("div");
 
   private inputContainer_: HTMLElement;
@@ -182,6 +187,8 @@ class FormBuilder {
   /* currently rendered step */
   private step_ = null;
 
+  private feedback_: Feedback;
+
   constructor(form: Form) {
     // form with start and end
     this.form_ = {
@@ -191,9 +198,18 @@ class FormBuilder {
 
     // CSS
     this.overlapElement_.className = "j2f-overlap";
+    this.containerEl_.className = "j2f-container";
+    this.feedbackEl_.className = "j2f-feedback";
     this.footer_.className = "j2f-footer";
 
+    this.overlapElement_.appendChild(this.containerEl_);
+    this.overlapElement_.appendChild(this.feedbackEl_);
     this.overlapElement_.appendChild(this.footer_);
+
+    // Feedback
+    this.feedback_ = new Feedback(this.feedbackEl_, () => {
+      this.next_();
+    });
   }
 
   stepToField_(field) {
@@ -210,17 +226,15 @@ class FormBuilder {
   async init() {
     this.rootElement_.appendChild(this.overlapElement_);
 
-    const button = document.createElement("button");
-    this.overlapElement_.appendChild(button);
-
-    // add return listener
-    this.rootElement_.addEventListener("keypress", (e) => {
+    // add keypress event listener
+    this.rootElement_.addEventListener("keyup", (e) => {
+      this.validate_();
       if (e.key === "Enter") {
         this.next_();
       }
     });
 
-    this.renderStep_(this.step_);
+    this.render_(this.step_);
 
     return new Promise((resolve, reject) => {
       this.resolve_ = resolve;
@@ -236,54 +250,53 @@ class FormBuilder {
       return;
     }
 
-    if (this.step_.type != FormType.Start)
+    if (this.step_.type !== FormType.Start)
       this.answers_[this.step_.id] = this.step_.handler();
     this.step_ = this.getNextStep_(this.step_);
 
-    this.renderStep_(this.step_);
+    this.render_(this.step_);
   }
 
-  renderStep_(step) {
-    this.renderContainer_(step);
+  render_(step) {
+    this.feedback_.reset();
+    this.renderStep_(step);
     this.renderNavigation_(step);
   }
 
   /*
     Renders field template with navigation button in a container
   */
-  renderContainer_(step): void {
-    // container
-    const container = document.createElement("div");
-    container.className = "j2f-container j2f-add";
+  renderStep_(step): void {
+    const stepEl = document.createElement("div");
+    stepEl.className = "j2f-step j2f-add";
 
     // template
     const elements = step.template();
     for (let element of elements) {
-      container.appendChild(element);
+      stepEl.appendChild(element);
     }
 
-    this.transitionContainer_(container);
+    this.transitionStep_(stepEl);
     if ("focus" in step) step.focus();
   }
 
   renderNavigation_(step): void {
-    // button
-    const button = document.createElement("button");
-    button.onclick = () => {
+    const buttonEl = document.createElement("button");
+    buttonEl.onclick = () => {
       this.next_();
     };
 
     switch (step.type) {
       case FormType.Start:
-        button.innerText = "Start";
+        buttonEl.innerText = "Start";
         break;
       case FormType.End:
-        button.innerText = "Senden";
+        buttonEl.innerText = "Senden";
         break;
       default:
-        button.innerText = "Weiter";
+        buttonEl.innerText = "Weiter";
     }
-    this.transitionNavigation_(button);
+    this.transitionNavigation_(buttonEl);
   }
 
   /*
@@ -317,21 +330,19 @@ class FormBuilder {
     return this.form_.steps[index + 1];
   }
 
-  transitionContainer_(newEl: HTMLElement) {
-    // if overlap element contains container (and close-button and footer)
-    if (this.overlapElement_.children.length === 3) {
+  transitionStep_(newStepEl: HTMLElement) {
+    // if overlap element contains step
+    if (this.containerEl_.children.length === 1) {
       this.isTransitioning_ = true;
-      const oldEl = <HTMLElement>this.overlapElement_.firstChild;
+      const oldStepEl = <HTMLElement>this.containerEl_.firstChild;
 
       // animate
-      oldEl.className = "j2f-remove";
-      this.overlapElement_.prepend(newEl);
+      this.containerEl_.replaceChild(newStepEl, oldStepEl);
 
       setTimeout(() => {
-        oldEl.remove();
         this.isTransitioning_ = false;
       }, 1000);
-    } else this.overlapElement_.prepend(newEl);
+    } else this.containerEl_.prepend(newStepEl);
   }
 
   transitionNavigation_(newEl: HTMLElement) {
@@ -340,13 +351,26 @@ class FormBuilder {
       const oldEl = <HTMLElement>this.footer_.firstChild;
 
       // animate
-      oldEl.className = "j2f-remove";
-      this.footer_.prepend(newEl);
-
-      setTimeout(() => {
-        oldEl.remove();
-      }, 1000);
+      this.footer_.replaceChild(newEl, oldEl);
     } else this.footer_.appendChild(newEl);
+  }
+
+  /*
+   * Validates field.
+   * Returns false if field value is not value and true elsewise.
+   * Is only active if field has property requiered set to true.
+   * @return boolean
+   */
+  validate_() {
+    if (this.step_.required) {
+      if (this.step_.handler() === "") {
+        this.feedback_.displayError("Bitte ausfüllen");
+        return false;
+      }
+    }
+
+    if (this.step_.type !== FormType.End) this.feedback_.displayNext("OK");
+    return true;
   }
 }
 

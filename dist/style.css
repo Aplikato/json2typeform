@@ -4,20 +4,6 @@ body {
   margin: 0;
 }
 
-@keyframes j2f-remove {
-  from {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0;
-  }
-}
-
-.j2f-remove {
-  animation: j2f-remove 1s forwards;
-}
-
 @keyframes add {
   from {
     opacity: 0.2;
@@ -50,24 +36,25 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .j2f-container {
-  position: absolute;
-  padding: 20px;
-  background-color: white;
-  border-radius: 8px;
-  width: 70%;
-  box-shadow: 0 8px 6px -6px black;
-  text-align: center;
+  width: 70vw;
+  color: white;
 }
 
-.j2f-container > h3 {
+.j2f-step {
+  width: 100%;
+}
+
+.j2f-step > h3 {
   font-size: 1.5rem;
   margin: 0 0 12px 0;
 }
 
-.j2f-container > input {
+.j2f-step > input {
+  color: white;
   border: none;
   background: none;
   box-shadow: 0 1px rgb(0, 0, 0, 0.3);
@@ -75,14 +62,38 @@ body {
   padding: 0 0 8px 0;
   font-size: 1.2rem;
 }
+.j2f-step > input:focus {
+  outline: none;
+}
 
-.j2f-container > select {
+.j2f-step > select {
   font-size: 1.7rem;
   background-color: #00d1b2;
   border: 0;
   padding: 12px;
   width: 70%;
   color: white;
+}
+
+/*
+ * Feedback
+ */
+.j2f-feedback {
+  width: 70vw;
+  margin-top: 12px;
+  color: white;
+}
+.j2f-feedback > .j2f-next > button {
+  background-color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 7px;
+  font-size: 1.2rem;
+  color: #00d1b2;
+}
+.j2f-feedback > .j2f-next > span {
+  margin-left: 12px;
+  color: rgb(0, 0, 0, 0.8);
 }
 
 /* 
