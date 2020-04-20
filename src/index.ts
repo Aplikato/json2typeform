@@ -177,6 +177,7 @@ class FormBuilder {
   private overlapElement_: HTMLElement = document.createElement("div");
   private containerEl_: HTMLElement = document.createElement("div");
   private feedbackEl_: HTMLElement = document.createElement("div");
+  private closeButtonEl_: HTMLElement = document.createElement("button");
   private footer_: HTMLElement = document.createElement("div");
 
   private inputContainer_: HTMLElement;
@@ -196,6 +197,13 @@ class FormBuilder {
     };
     this.step_ = this.form_.steps[0];
 
+    // close button
+    this.closeButtonEl_.className = "j2f-close-button";
+    this.closeButtonEl_.innerText = "X";
+    this.closeButtonEl_.onclick = () => {
+      this.reset_();
+    };
+
     // CSS
     this.overlapElement_.className = "j2f-overlap";
     this.containerEl_.className = "j2f-container";
@@ -204,6 +212,7 @@ class FormBuilder {
 
     this.overlapElement_.appendChild(this.containerEl_);
     this.overlapElement_.appendChild(this.feedbackEl_);
+    this.overlapElement_.appendChild(this.closeButtonEl_);
     this.overlapElement_.appendChild(this.footer_);
 
     // Feedback
@@ -226,14 +235,6 @@ class FormBuilder {
   async init() {
     this.rootElement_.appendChild(this.overlapElement_);
 
-    // close button
-    const closeButton = document.createElement("button");
-    closeButton.innerText = "x";
-    this.overlapElement_.appendChild(closeButton);
-    closeButton.onclick = () => {
-      this.reset_();
-    };
-
     // add keypress event listener
     this.rootElement_.addEventListener("keyup", (e) => {
       this.validate_();
@@ -250,11 +251,10 @@ class FormBuilder {
   }
 
   reset_() {
+    this.answers_ = {};
+    this.step_ = this.form_.steps[0];
+    this.containerEl_.innerHTML = "";
     this.overlapElement_.remove();
-    this.overlapElement_ = document.createElement("div");
-    this.overlapElement_.className = "j2f-overlap";
-    this.overlapElement_.appendChild(this.footer_);
-    this.answers_ = null;
   }
 
   next_() {
