@@ -1,6 +1,6 @@
 {
   "name": "@aplikato/json2typeform",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "Converts a JSON object to a form similar to Typeform.",
   "main": "dist/index.js",
   "directories": {
@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "cp ./styles/aplikato.css ./dist/style.css && tsc",
+    "pub": "yarn build && yarn publish --access public",
     "dev": "./runDev.sh"
   },
   "author": "Dirk Hornung",
