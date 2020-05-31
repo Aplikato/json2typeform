@@ -1,6 +1,6 @@
 {
   "name": "@aplikato/json2typeform",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Converts a JSON object to a form similar to Typeform.",
   "main": "dist/index.js",
   "directories": {
