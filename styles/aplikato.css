@@ -53,6 +53,10 @@ body {
   margin: 0 0 12px 0;
 }
 
+.j2f-step > h4 {
+  margin: 0 0 20px 0;
+}
+
 .j2f-step > input {
   color: white;
   border: none;

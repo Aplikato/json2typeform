@@ -20,31 +20,43 @@
             id: "string",
             properties: {
               question: "What is your string?",
+              subtitle: "Subtitle",
               placeholder: "max@mustermann.de",
             },
             required: true,
-            logic: {
-              conditions: [
-                { type: "EQUAL", value: "afs", to: "number" },
-                { type: "ALWAYS", to: "end" },
-              ],
+            // logic: {
+            //   conditions: [
+            //     { type: "EQUAL", value: "afs", to: "number" },
+            //     { type: "ALWAYS", to: "end" },
+            //   ],
+            // },
+          },
+          {
+            type: "BINARY_CHOICE",
+            id: "BinaryChoice",
+            properties: {
+              question: "A or B?",
+              subtitle: "Subtitle",
+              choices: ["A", "B"],
             },
           },
-          // {
-          //   type: "MULTIPLE_CHOICE",
-          //   id: "multipleChoice",
-          //   properties: {
-          //     question: "What is your choice?",
-          //     choices: ["first", "second", "third"]
-          //   }
-          // },
-          // {
-          //   type: "NUMBER",
-          //   id: "number",
-          //   properties: {
-          //     question: "What is your number?"
-          //   }
-          // },
+          {
+            type: "MULTIPLE_CHOICE",
+            id: "multipleChoice",
+            properties: {
+              question: "What is your choice?",
+              subtitle: "Subtitle",
+              choices: ["first", "second", "third"],
+            },
+          },
+          {
+            type: "NUMBER",
+            id: "number",
+            properties: {
+              question: "What is your number?",
+              subtitle: "Subtitle",
+            },
+          },
           {
             type: "END",
             id: "end",

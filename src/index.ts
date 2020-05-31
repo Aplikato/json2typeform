@@ -6,6 +6,7 @@ enum FormType {
   Start = "START",
   MultipleChoice = "MULTIPLE_CHOICE",
   Number = "NUMBER",
+  BinaryChoice = "BINARY_CHOICE",
 }
 
 interface FieldProperties {
@@ -13,7 +14,7 @@ interface FieldProperties {
   title?: string;
   subtitle?: string;
   placeholder?: string;
-  choices?: [string];
+  choices?: string[];
 }
 
 type FormResponse = string | number;
@@ -38,6 +39,7 @@ interface FormField {
   logic?: {
     conditions: Condition[];
   };
+  next?: () => {};
 }
 
 interface Form {
@@ -47,7 +49,11 @@ interface Form {
 type Types = Record<
   FormType,
   {
-    template(id: string, properties: FieldProperties): HTMLElement[];
+    template(
+      id: string,
+      properties: FieldProperties,
+      next: () => {}
+    ): HTMLElement[];
     handler: any;
     focus?: any;
   }
@@ -96,18 +102,26 @@ const types: Types = {
   },
   STRING: {
     template: (id, properties) => {
+      const elements = [];
       // question
       const question = document.createElement("h3");
       question.textContent = properties.question;
-
+      elements.push(question);
+      //subtitle
+      if ("subtitle" in properties) {
+        const subtitle = document.createElement("h4");
+        subtitle.innerText = properties.subtitle;
+        elements.push(subtitle);
+      }
       // input
       const input = document.createElement("input");
       input.id = id;
       input.setAttribute("name", id);
       input.setAttribute("type", "text");
       input.setAttribute("placeholder", properties.placeholder);
+      elements.push(input);
 
-      return [question, input];
+      return elements;
     },
     handler: (id) => {
       const value = (<HTMLInputElement>document.getElementById(id)).value;
@@ -119,10 +133,17 @@ const types: Types = {
   },
   MULTIPLE_CHOICE: {
     template: (id, properties) => {
+      const elements = [];
       // question
       const question = document.createElement("h3");
       question.textContent = properties.question;
-
+      elements.push(question);
+      //subtitle
+      if ("subtitle" in properties) {
+        const subtitle = document.createElement("h4");
+        subtitle.innerText = properties.subtitle;
+        elements.push(subtitle);
+      }
       // select
       const select = document.createElement("select");
       select.id = id;
@@ -133,8 +154,9 @@ const types: Types = {
         option.innerText = choice;
         select.appendChild(option);
       }
+      elements.push(select);
 
-      return [question, select];
+      return elements;
     },
     handler: (id) => {
       const value = (<HTMLSelectElement>document.getElementById(id)).value;
@@ -146,20 +168,74 @@ const types: Types = {
   },
   NUMBER: {
     template: (id, properties) => {
+      const elements = [];
       // question
       const question = document.createElement("h3");
       question.textContent = properties.question;
-
+      elements.push(question);
+      //subtitle
+      if ("subtitle" in properties) {
+        const subtitle = document.createElement("h4");
+        subtitle.innerText = properties.subtitle;
+        elements.push(subtitle);
+      }
       // input
       const input = document.createElement("input");
       input.id = id;
       input.setAttribute("name", id);
       input.setAttribute("type", "number");
+      elements.push(input);
 
-      return [question, input];
+      return elements;
     },
     handler: (id) => {
       const value = (<HTMLInputElement>document.getElementById(id)).value;
+      return value;
+    },
+    focus: (id) => {
+      document.getElementById(id).focus();
+    },
+  },
+  BINARY_CHOICE: {
+    template: (id, properties, next) => {
+      const elements = [];
+      // question
+      const question = document.createElement("h3");
+      question.textContent = properties.question;
+      elements.push(question);
+      //subtitle
+      if ("subtitle" in properties) {
+        const subtitle = document.createElement("h4");
+        subtitle.innerText = properties.subtitle;
+        elements.push(subtitle);
+      }
+      // button A or B
+      const buttonA = document.createElement("button");
+      const buttonB = document.createElement("button");
+      buttonA.innerText = properties.choices[0];
+      buttonB.innerText = properties.choices[1];
+      buttonA.value = properties.choices[0];
+      buttonB.value = properties.choices[1];
+      elements.push(buttonA);
+      elements.push(buttonB);
+      const hidden = document.createElement("input");
+      hidden.setAttribute("type", "hidden");
+      hidden.id = id;
+
+      elements.push(hidden);
+      buttonA.onclick = () => {
+        hidden.value = properties.choices[0];
+        next();
+      };
+      buttonB.onclick = () => {
+        hidden.value = properties.choices[1];
+        next();
+      };
+
+      return elements;
+    },
+    handler: (id) => {
+      const value = (<HTMLSelectElement>document.getElementById(id)).value;
       return value;
     },
     focus: (id) => {
@@ -223,7 +299,10 @@ class FormBuilder {
   stepToField_(field) {
     const step = {
       ...field,
-      template: () => types[field.type].template(field.id, field.properties),
+      template: () =>
+        types[field.type].template(field.id, field.properties, () =>
+          this.next_()
+        ),
       handler: () => types[field.type].handler(field.id),
     };
     if ("focus" in types[field.type])
