@@ -445,10 +445,9 @@ class FormBuilder {
   /*
    * Validates field.
    * Returns false if field value is not value and true elsewise.
-   * Is only active if field has property requiered set to true.
-   * @return boolean
+   * Is only active if field has property required set to true.
    */
-  validate_() {
+  validate_(): boolean {
     if (this.step_.required) {
       if (this.step_.handler() === "") {
         this.feedback_.displayError("Bitte ausfüllen");
