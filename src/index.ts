@@ -315,9 +315,10 @@ class FormBuilder {
 
     // add keypress event listener
     this.rootElement_.addEventListener("keyup", (e) => {
-      this.validate_();
-      if (e.key === "Enter") {
-        this.next_();
+      if (this.validate_()) {
+        if (e.key === "Enter") {
+          this.next_();
+        }
       }
     });
 
@@ -375,7 +376,9 @@ class FormBuilder {
   renderNavigation_(step): void {
     const buttonEl = document.createElement("button");
     buttonEl.onclick = () => {
-      this.next_();
+      if (this.validate_()) {
+        this.next_();
+      }
     };
 
     switch (step.type) {
@@ -450,7 +453,7 @@ class FormBuilder {
   validate_(): boolean {
     if (this.step_.required) {
       if (this.step_.handler() === "") {
-        this.feedback_.displayError("Bitte ausfüllen");
+        this.feedback_.displayError("Bitte ausfüllen.");
         return false;
       }
     }
