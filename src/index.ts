@@ -7,6 +7,7 @@ enum FormType {
   MultipleChoice = "MULTIPLE_CHOICE",
   Number = "NUMBER",
   BinaryChoice = "BINARY_CHOICE",
+  Email = "EMAIL",
 }
 
 interface FieldProperties {
@@ -56,6 +57,7 @@ type Types = Record<
     ): HTMLElement[];
     handler: any;
     focus?: any;
+    validate?: any;
   }
 >;
 const types: Types = {
@@ -99,6 +101,49 @@ const types: Types = {
       return elements;
     },
     handler: (id) => null,
+  },
+  EMAIL: {
+    template: (id, properties) => {
+      const elements = [];
+      // question
+      const question = document.createElement("h3");
+      question.textContent = properties.question;
+      elements.push(question);
+      //subtitle
+      if ("subtitle" in properties) {
+        const subtitle = document.createElement("h4");
+        subtitle.innerText = properties.subtitle;
+        elements.push(subtitle);
+      }
+      // input
+      const input = document.createElement("input");
+      input.id = id;
+      input.setAttribute("name", id);
+      input.setAttribute("type", "text");
+      input.setAttribute("placeholder", properties.placeholder);
+      elements.push(input);
+
+      return elements;
+    },
+    handler: (id) => {
+      const value = (<HTMLInputElement>document.getElementById(id)).value;
+      return value;
+    },
+    focus: (id) => {
+      document.getElementById(id).focus();
+    },
+    validate: (id, handler, feedback) => {
+      let regexpEmail = new RegExp(
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+      if (regexpEmail.test(handler())) {
+        feedback.displayError("E-Mail ok. Test");
+        return true;
+      } else {
+        feedback.displayError("Diese E-Mail-Adresse ist ungültig.");
+        return false;
+      }
+    },
   },
   STRING: {
     template: (id, properties) => {
@@ -305,8 +350,14 @@ class FormBuilder {
         ),
       handler: () => types[field.type].handler(field.id),
     };
+
     if ("focus" in types[field.type])
       step.focus = () => types[field.type].focus(field.id);
+
+    if ("validate" in types[field.type])
+      step.validate = () =>
+        types[field.type].validate(field.id, step.handler, this.feedback_);
+
     return step;
   }
 
@@ -315,10 +366,11 @@ class FormBuilder {
 
     // add keypress event listener
     this.rootElement_.addEventListener("keyup", (e) => {
-      if (this.validate_()) {
-        if (e.key === "Enter") {
-          this.next_();
-        }
+      if (this.step_.validate && !this.step_.validate()) return;
+      if (this.step_.required && this.isEmpty_()) return;
+
+      if (e.key === "Enter") {
+        this.next_();
       }
     });
 
@@ -376,9 +428,9 @@ class FormBuilder {
   renderNavigation_(step): void {
     const buttonEl = document.createElement("button");
     buttonEl.onclick = () => {
-      if (this.validate_()) {
-        this.next_();
-      }
+      if (this.step_.validate && !this.step_.validate()) return;
+      if (this.step_.required && this.isEmpty_()) return;
+      this.next_();
     };
 
     switch (step.type) {
@@ -450,16 +502,14 @@ class FormBuilder {
    * Returns false if field value is not value and true elsewise.
    * Is only active if field has property required set to true.
    */
-  validate_(): boolean {
-    if (this.step_.required) {
-      if (this.step_.handler() === "") {
-        this.feedback_.displayError("Bitte ausfüllen.");
-        return false;
-      }
+  isEmpty_(): boolean {
+    if (this.step_.handler() === "") {
+      this.feedback_.displayError("Bitte ausfüllen.");
+      return true;
     }
 
     if (this.step_.type !== FormType.End) this.feedback_.displayNext("OK");
-    return true;
+    return false;
   }
 }
 
