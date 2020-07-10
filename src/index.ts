@@ -8,6 +8,7 @@ enum FormType {
   Number = "NUMBER",
   BinaryChoice = "BINARY_CHOICE",
   Email = "EMAIL",
+  FileUpload = "FILEUPLOAD",
 }
 
 interface FieldProperties {
@@ -282,6 +283,37 @@ const types: Types = {
     handler: (id) => {
       const value = (<HTMLSelectElement>document.getElementById(id)).value;
       return value;
+    },
+    focus: (id) => {
+      document.getElementById(id).focus();
+    },
+  },
+  FILEUPLOAD: {
+    template: (id, properties) => {
+      const elements = [];
+      // question
+      const question = document.createElement("h3");
+      question.textContent = properties.question;
+      elements.push(question);
+      //subtitle
+      if ("subtitle" in properties) {
+        const subtitle = document.createElement("h4");
+        subtitle.innerText = properties.subtitle;
+        elements.push(subtitle);
+      }
+      // file upload    TODO(lisa): multiple?
+      const input = document.createElement("input");
+      input.id = id;
+      input.setAttribute("name", id);
+      input.setAttribute("type", "file");
+      elements.push(input);
+
+      return elements;
+    },
+    handler: (id) => {
+      const selectedFile = (<HTMLInputElement>document.getElementById(id))
+        .files[0];
+      return selectedFile;
     },
     focus: (id) => {
       document.getElementById(id).focus();
