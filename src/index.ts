@@ -8,6 +8,7 @@ enum FormType {
   Number = "NUMBER",
   BinaryChoice = "BINARY_CHOICE",
   Email = "EMAIL",
+  Internship = "INTERNSHIP",
 }
 
 interface FieldProperties {
@@ -15,6 +16,8 @@ interface FieldProperties {
   title?: string;
   subtitle?: string;
   placeholder?: string;
+  placeholderFirm?: string;
+  placeholderMonths?: string;
   choices?: string[];
 }
 
@@ -281,6 +284,45 @@ const types: Types = {
     },
     handler: (id) => {
       const value = (<HTMLSelectElement>document.getElementById(id)).value;
+      return value;
+    },
+    focus: (id) => {
+      document.getElementById(id).focus();
+    },
+  },
+  INTERNSHIP: {
+    template: (id, properties) => {
+      const elements = [];
+      // question
+      const question = document.createElement("h3");
+      question.textContent = properties.question;
+      elements.push(question);
+      //subtitle
+      if ("subtitle" in properties) {
+        const subtitle = document.createElement("h4");
+        subtitle.innerText = properties.subtitle;
+        elements.push(subtitle);
+      }
+      //TODO(lisa): how many input elements depend on how many internships given on previous question (or just delete previous question and just leave this one here)
+      //number
+      const number = document.createElement("input");
+      number.id = id;
+      number.setAttribute("name", id);
+      number.setAttribute("type", "number");
+      number.setAttribute("placeholder", properties.placeholderMonths);
+      elements.push(number);
+      // input
+      const input = document.createElement("input");
+      input.id = id;
+      input.setAttribute("name", id);
+      input.setAttribute("type", "text");
+      input.setAttribute("placeholder", properties.placeholderFirm);
+      elements.push(input);
+
+      return elements;
+    },
+    handler: (id) => {
+      const value = (<HTMLInputElement>document.getElementById(id)).value;
       return value;
     },
     focus: (id) => {
