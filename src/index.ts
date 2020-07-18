@@ -8,6 +8,8 @@ enum FormType {
   Number = "NUMBER",
   BinaryChoice = "BINARY_CHOICE",
   Email = "EMAIL",
+  File_Upload = "FILE_UPLOAD",
+  Internship = "INTERNSHIP",
 }
 
 interface FieldProperties {
@@ -244,7 +246,7 @@ const types: Types = {
   BINARY_CHOICE: {
     template: (id, properties, next) => {
       const elements = [];
-      // question
+      // title
       const question = document.createElement("h3");
       question.textContent = properties.question;
       elements.push(question);
@@ -281,6 +283,75 @@ const types: Types = {
     },
     handler: (id) => {
       const value = (<HTMLSelectElement>document.getElementById(id)).value;
+      return value;
+    },
+    focus: (id) => {
+      document.getElementById(id).focus();
+    },
+  },
+  FILE_UPLOAD: {
+    template: (id, properties) => {
+      const elements = [];
+      // question
+      const question = document.createElement("h3");
+      question.textContent = properties.question;
+      elements.push(question);
+      //subtitle
+      if ("subtitle" in properties) {
+        const subtitle = document.createElement("h4");
+        subtitle.innerText = properties.subtitle;
+        elements.push(subtitle);
+      }
+      // file upload
+      const input = document.createElement("input");
+      input.id = id;
+      input.setAttribute("name", id);
+      input.setAttribute("type", "file");
+      elements.push(input);
+
+      return elements;
+    },
+    handler: (id) => {
+      const selectedFile = (<HTMLInputElement>document.getElementById(id))
+        .files[0];
+      return selectedFile;
+    },
+    focus: (id) => {
+      document.getElementById(id).focus();
+    },
+  },
+  INTERNSHIP: {
+    template: (id, properties) => {
+      const elements = [];
+      // question
+      const question = document.createElement("h3");
+      question.textContent = properties.question;
+      elements.push(question);
+      //subtitle
+      if ("subtitle" in properties) {
+        const subtitle = document.createElement("h4");
+        subtitle.innerText = properties.subtitle;
+        elements.push(subtitle);
+      }
+      //TODO(lisa): how many input elements depend on how many internships given on previous question (or just delete previous question and just leave this one here)
+      //number
+      const number = document.createElement("input");
+      number.id = id;
+      number.setAttribute("name", id);
+      number.setAttribute("type", "number");
+      elements.push(number);
+      // input
+      const input = document.createElement("input");
+      input.id = id;
+      input.setAttribute("name", id);
+      input.setAttribute("type", "text");
+      input.setAttribute("placeholder", properties.placeholder);
+      elements.push(input);
+
+      return elements;
+    },
+    handler: (id) => {
+      const value = (<HTMLInputElement>document.getElementById(id)).value;
       return value;
     },
     focus: (id) => {
