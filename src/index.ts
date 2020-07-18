@@ -291,6 +291,7 @@ const types: Types = {
     },
   },
   INTERNSHIP: {
+    // TODO (lisa): style
     template: (id, properties) => {
       const elements = [];
       // question
@@ -303,27 +304,84 @@ const types: Types = {
         subtitle.innerText = properties.subtitle;
         elements.push(subtitle);
       }
-      //TODO(lisa): how many input elements depend on how many internships given on previous question (or just delete previous question and just leave this one here)
-      //number
-      const number = document.createElement("input");
-      number.id = id;
-      number.setAttribute("name", id);
-      number.setAttribute("type", "number");
-      number.setAttribute("placeholder", properties.placeholderMonths);
-      elements.push(number);
-      // input
-      const input = document.createElement("input");
-      input.id = id;
-      input.setAttribute("name", id);
-      input.setAttribute("type", "text");
-      input.setAttribute("placeholder", properties.placeholderFirm);
-      elements.push(input);
+      //TODO(lisa): make it dynamic
+      const divA = document.createElement("div");
+      divA.id = id + "divA";
+      divA.setAttribute("name", id + "divA");
+      // input A
+      const inputA = document.createElement("input");
+      inputA.id = id + "inputA";
+      inputA.setAttribute("name", id + "inputA");
+      inputA.setAttribute("type", "text");
+      inputA.setAttribute("placeholder", properties.placeholderFirm);
+      elements.push(inputA);
+      divA.appendChild(inputA);
+      //number A
+      const numberA = document.createElement("input");
+      numberA.id = id + "numberA";
+      numberA.setAttribute("name", id) + "numberA";
+      numberA.setAttribute("type", "number");
+      numberA.setAttribute("placeholder", properties.placeholderMonths);
+      elements.push(numberA);
+      // input B
+      const inputB = document.createElement("input");
+      inputB.id = id + "inputB";
+      inputB.setAttribute("name", id + "inputB");
+      inputB.setAttribute("type", "text");
+      inputB.setAttribute("placeholder", properties.placeholderFirm);
+      elements.push(inputB);
+      //number B
+      const numberB = document.createElement("input");
+      numberB.id = id + "numberB";
+      numberB.setAttribute("name", id + "numberB");
+      numberB.setAttribute("type", "number");
+      numberB.setAttribute("placeholder", properties.placeholderMonths);
+      elements.push(numberB);
+      // input C
+      const inputC = document.createElement("input");
+      inputC.id = id + "inputC";
+      inputC.setAttribute("name", id + "inputC");
+      inputC.setAttribute("type", "text");
+      inputC.setAttribute("placeholder", properties.placeholderFirm);
+      elements.push(inputC);
+      //number C
+      const numberC = document.createElement("input");
+      numberC.id = id + "numberC";
+      numberC.setAttribute("name", id + "numberC");
+      numberC.setAttribute("type", "number");
+      numberC.setAttribute("placeholder", properties.placeholderMonths);
+      elements.push(numberC);
 
       return elements;
     },
     handler: (id) => {
-      const value = (<HTMLInputElement>document.getElementById(id)).value;
-      return value;
+      const values = [];
+      const valueInputA = (<HTMLInputElement>(
+        document.getElementById(id + "inputA")
+      )).value;
+      const valueInputB = (<HTMLInputElement>(
+        document.getElementById(id + "inputB")
+      )).value;
+      const valueInputC = (<HTMLInputElement>(
+        document.getElementById(id + "inputC")
+      )).value;
+      const valueNumberA = (<HTMLInputElement>(
+        document.getElementById(id + "inputA")
+      )).value;
+      const valueNumberB = (<HTMLInputElement>(
+        document.getElementById(id + "inputA")
+      )).value;
+      const valueNumberC = (<HTMLInputElement>(
+        document.getElementById(id + "inputA")
+      )).value;
+      values.push(valueInputA);
+      values.push(valueInputB);
+      values.push(valueInputC);
+      values.push(valueNumberA);
+      values.push(valueNumberB);
+      values.push(valueNumberC);
+
+      return values;
     },
     focus: (id) => {
       document.getElementById(id).focus();
